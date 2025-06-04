@@ -170,8 +170,7 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
-  font-optical-sizing: auto;
+  font-family: var(--font-open-sans), sans-serif;
 }
 
 .lightMode {
