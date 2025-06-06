@@ -4,11 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --u-primary-color: #6b2cf5;
-  --u-secondary-color: #4461f2;
-
-  --r-primary-color: #06b6d4;
-  --r-secondary-color: #1e3a8a;
+  --primary-color: #06b6d4;
+  --secondary-color: #1e3a8a;
 
   --tertiary-color: #22d3ee;
 
@@ -169,6 +166,10 @@
   color: #fff;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-open-sans), sans-serif;
 }
@@ -177,15 +178,14 @@ body {
   --bg-primary: linear-gradient(to right, #fbf2f2 7f5, #faf7f5);
   --bg-purple: #f3e8ff;
 
-  --u-primary-white: #6b2cf5;
   --secondary-color: #fff;
 
   --bg-primary-color: #f3f4f6;
   --bg-secondary-color: #fff;
   --bg-tertiary-color: #faf7f5;
 
-  --r-primary-white: #06b6d4;
-  --r-secondary-white: #1e3a8a;
+  --primary-white: #06b6d4;
+  --secondary-white: #1e3a8a;
 
   --bg-primary-gray: #f0f0f1;
   --border-primary-gray: #f3f4f6;
@@ -201,11 +201,10 @@ body {
   --bg-primary: linear-gradient(to right, #1a1e2e, #292e3e);
   --bg-purple: #1a1e2e;
 
-  --u-primary-white: #fff;
   --secondary-color: #1a1e2e;
 
-  --r-primary-white: #faf7f5;
-  --r-secondary-white: #faf7f5;
+  --primary-white: #faf7f5;
+  --secondary-white: #faf7f5;
 
   --bg-primary-color: #1a1e2e;
   --bg-secondary-color: #31374b;

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import qs from 'query-string';
-import Loading from '@/app/loading';
+import LoadingPage from '@/app/loading';
 
 import { jwtService } from '@/services/auth.service';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -25,7 +25,7 @@ export const videoUri = process.env.NEXT_PUBLIC_VIDEO_URI;
 export const backendUri = process.env.NEXT_PUBLIC_API_URL;
 
 const UserContext = React.createContext<UserProviderContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const useUser = (): UserProviderContextType => {
@@ -80,12 +80,7 @@ export default function UserProvider({
         const res = await getUserService();
 
         if (res.user) {
-          dispatch(
-            setUserReducer({
-              user: res.user,
-              cvMinuteCount: res.cvMinuteCount,
-            })
-          );
+          dispatch(setUserReducer({ user: res.user }));
         }
       })();
     }
@@ -117,7 +112,7 @@ export default function UserProvider({
         handleRemoveQuery,
       }}
     >
-      {isLoading ? <Loading /> : children}
+      {isLoading ? <LoadingPage /> : children}
     </UserContext.Provider>
   );
 }
