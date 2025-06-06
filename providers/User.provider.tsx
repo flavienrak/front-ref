@@ -51,7 +51,7 @@ export default function UserProvider({
   const [isLoading, setIsLoading] = React.useState(true);
   const [userId, setUserId] = React.useState<string | number | null>(null);
 
-  const notProtectedPaths = ['/'];
+  const notProtectedPaths = ['/', '/home'];
 
   React.useEffect(() => {
     (async () => {
