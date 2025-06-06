@@ -51,7 +51,7 @@ export default function UserProvider({
   const [isLoading, setIsLoading] = React.useState(true);
   const [userId, setUserId] = React.useState<string | number | null>(null);
 
-  const notProtectedPaths = ['/'];
+  const notProtectedPaths = ['/', '/home'];
 
   React.useEffect(() => {
     (async () => {
@@ -60,16 +60,16 @@ export default function UserProvider({
       if (res.user) {
         setUserId(res.user.id);
 
-        if (res.user.role === 'user') {
-        } else {
-        }
+        // if (res.user.role === 'user') {
+        // } else {
+        // }
         setIsLoading(false);
       } else {
-        if (!notProtectedPaths.includes(pathname)) {
-          window.location.href = '/';
-        } else {
-          setIsLoading(false);
-        }
+        // if (!notProtectedPaths.includes(pathname)) {
+        //   window.location.href = '/';
+        // } else {
+        // }
+        setIsLoading(false);
       }
     })();
   }, [pathname]);

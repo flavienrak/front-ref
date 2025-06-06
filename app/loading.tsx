@@ -3,14 +3,14 @@ import React from 'react';
 export default function Loading() {
   return (
     <div className="h-full w-full [background-image:var(--bg-primary)]">
-      <div className="flex h-full w-full justify-center items-center min-h-screen bg-gradient-to-r from-[#4461F2] to-[#6B7FFF] bg-clip-text text-transparent">
+      <div className="flex h-full w-full justify-center items-center min-h-screen">
         <div
           aria-label="Chargement..."
           role="status"
           className="flex items-center space-x-2"
         >
           <svg
-            className="h-20 w-20 animate-spin stroke-[var(--u-secondary-color)]"
+            className="h-20 w-20 animate-spin stroke-[var(--primary-color)]"
             viewBox="0 0 256 256"
           >
             <line
@@ -86,7 +86,9 @@ export default function Loading() {
               strokeWidth="24"
             ></line>
           </svg>
-          <span className="text-4xl font-medium">Chargement...</span>
+          <span className="text-4xl font-medium text-[var(--primary-color)]">
+            Chargement...
+          </span>
         </div>
       </div>
     </div>

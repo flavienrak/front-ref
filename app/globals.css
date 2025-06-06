@@ -162,7 +162,7 @@
 }
 
 *::selection {
-  background: var(--u-secondary-color);
+  background: var(--primary-color);
   color: #fff;
 }
 
