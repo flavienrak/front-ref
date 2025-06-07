@@ -1,7 +1,9 @@
 'use client';
 
 import React from 'react';
+
 import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
 
 export default function Popup({
   large,
@@ -33,19 +35,7 @@ export default function Popup({
               onClick={onClose}
               className="absolute z-10 text-[var(--text-primary-color)] top-2 right-2 p-2 cursor-pointer rounded-full flex justify-center items-center h-10 w-10 bg-[var(--bg-primary-color)] transition-all duration-150"
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M18 6 6 18" />
-                <path d="m6 6 12 12" />
-              </svg>
+              <X size={20} />
             </i>
           )}
         </div>
