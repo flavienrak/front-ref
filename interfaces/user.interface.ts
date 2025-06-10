@@ -1,13 +1,13 @@
-import { FileInterface } from './file.interface';
+import { UserRoomInterface } from './user-room.interface';
 
 export interface UserInterface {
   id: number;
   name: string;
   email: string;
-  acceptConditions: boolean;
-  role: 'user' | 'recruiter' | 'admin';
+  isVerified: boolean;
+  role: 'user' | 'admin';
 
-  files: FileInterface[];
+  userRooms: UserRoomInterface[];
 
   createdAt: Date;
   updatedAt: Date;

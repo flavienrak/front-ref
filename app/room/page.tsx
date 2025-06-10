@@ -1,5 +1,5 @@
 import React from 'react';
-import RoomComponent from '@/components/home/room/RoomComponent';
+import UserRoomComponent from '@/components/room/UserRoomComponent';
 
 import type { Metadata } from 'next';
 
@@ -8,10 +8,10 @@ export const metadata: Metadata = {
   description: 'Room Page',
 };
 
-export default function RoomPage() {
+export default function UserRoomPage() {
   return (
-    <div className="w-full h-full">
-      <RoomComponent />
+    <div className="w-full">
+      <UserRoomComponent />
     </div>
   );
 }

@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { Toaster } from '@/components/ui/sonner';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 type Position =
   | 'top-left'
@@ -32,12 +34,13 @@ export default function ToastProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const { mode } = useSelector((state: RootState) => state.persistInfos);
   const [toastPosition, setToastPosition] =
     React.useState<Position>('top-center');
 
   return (
     <ToastContext.Provider value={{ setToastPosition }}>
-      <Toaster position={toastPosition} richColors />
+      <Toaster position={toastPosition} richColors theme={mode} />
       {children}
     </ToastContext.Provider>
   );

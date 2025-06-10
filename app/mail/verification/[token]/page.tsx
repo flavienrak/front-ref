@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function MailTokenPage() {
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full text-[var(--text-primary-color)] [background-image:var(--bg-primary)]">
       <MailValidationComponent />
     </div>
   );

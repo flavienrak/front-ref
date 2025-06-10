@@ -51,24 +51,31 @@ export default function UserProvider({
   const [isLoading, setIsLoading] = React.useState(true);
   const [userId, setUserId] = React.useState<string | number | null>(null);
 
-  const notProtectedPaths = ['/', '/home'];
+  const notProtectedPaths = ['/'];
+
+  const mailVerificationRegex = /^\/mail\/verification\/[^\/]+$/;
 
   React.useEffect(() => {
     (async () => {
       const res = await jwtService();
 
-      if (res.user) {
-        setUserId(res.user.id);
-
-        // if (res.user.role === 'user') {
-        // } else {
-        // }
-        setIsLoading(false);
+      if (res.id) {
+        setUserId(res.id);
+        if (
+          notProtectedPaths.includes(pathname) ||
+          mailVerificationRegex.test(pathname)
+        ) {
+          router.push('/room');
+        } else {
+          setIsLoading(false);
+        }
       } else {
-        // if (!notProtectedPaths.includes(pathname)) {
-        //   window.location.href = '/';
-        // } else {
-        // }
+        if (
+          !notProtectedPaths.includes(pathname) &&
+          !mailVerificationRegex.test(pathname)
+        ) {
+          window.location.href = '/';
+        }
         setIsLoading(false);
       }
     })();
@@ -81,6 +88,8 @@ export default function UserProvider({
 
         if (res.user) {
           dispatch(setUserReducer({ user: res.user }));
+        } else {
+          window.location.href = '/';
         }
       })();
     }

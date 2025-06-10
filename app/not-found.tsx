@@ -11,22 +11,20 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <div>
-      <section className="min-h-screen min-w-screen flex items-center justify-center">
+      <section className="min-h-screen min-w-screen flex items-center justify-center text-[var(--text-primary-color)] [background-image:var(--bg-primary)]">
         <div className="container flex flex-col items-center px-4">
           <div className="max-w-[24rem] text-center">
-            <h2 className="text-style bg-clip-text text-white font-bold text-[6rem] sm:text-[12rem] select-none bg-style">
+            <h2 className="text-style bg-clip-text text-[var(--bg-secondary-color)] font-bold text-[6rem] sm:text-[12rem] select-none bg-style">
               404
             </h2>
-            <p className="text-2xl sm:text-4xl font-semibold">
-              Ooops!, Nous n'avons pas trouvé la page.
-            </p>
-            <p className="py-6">
-              Pour revenir à la page d'accueil, cliquer sur ce bouton.
-            </p>
-            <div>
+            <div className="flex flex-col gap-8">
+              <p className="text-2xl sm:text-4xl font-semibold bg-gradient-to-b from-[var(--primary-color)] to-[var(--primary-color)]/50 bg-clip-text text-transparent">
+                Ooops!, Nous n'avons pas trouvé la page.
+              </p>
+              <p>Pour revenir à la page d'accueil, cliquer sur ce bouton.</p>
               <Link
                 href="/"
-                className="flex justify-center gap-4 py-3 sm:py-4 rounded-lg text-white bg-gradient-to-r from-[var(--u-primary-color)] to-[#8B5CF6] transition-opacity duration-150 hover:opacity-80"
+                className="flex justify-center gap-4 py-3 sm:py-4 rounded-lg text-white bg-gradient-to-b from-[var(--primary-color)] to-[var(--primary-color)]/50 transition-opacity duration-150 hover:opacity-80"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

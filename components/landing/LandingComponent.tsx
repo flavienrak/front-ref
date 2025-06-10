@@ -1,11 +1,85 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import qs from 'query-string';
 import LandingHeader from '@/components/landing/LandingHeader';
+import Popup from '@/components/utils/Popup';
+import LoginForm from '@/components/auth/LoginForm';
+import RegisterFom from '@/components/auth/RegisterForm';
+
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { googleService } from '@/services/auth.service';
+import { toast } from 'sonner';
 
 export default function LandingComponent() {
+  const { user } = useSelector((state: RootState) => state.user);
+
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [showAuth, setShowAuth] = React.useState<'login' | 'register' | null>(
+    null,
+  );
   const [redirect, setRedirect] = React.useState(false);
+  const [credentials, setCredentials] = React.useState({
+    name: '',
+    email: '',
+    profile: '',
+  });
+
+  React.useEffect(() => {
+    let isMounted = true;
+
+    const currentQuery = qs.parse(searchParams.toString());
+
+    if (currentQuery.googleAuth) {
+      (async () => {
+        if (typeof currentQuery.googleAuth === 'string') {
+          // const res = await googleService(currentQuery.googleAuth);
+
+          if (isMounted) {
+            // if (res.userNotFound) {
+            //   setCredentials({
+            //     name: res.name,
+            //     email: res.email,
+            //     profile: res.profile,
+            //   });
+            // } else {
+            //   // window.location.href = '/room';
+            // }
+            toast.warning('Adresse email non enregistré', {
+              description: 'Veuillez vous inscrire',
+            });
+            setCredentials({
+              name: 'email',
+              email: 'email',
+              profile: 'email',
+            });
+            setShowAuth('register');
+
+            delete currentQuery.googleAuth;
+            const url = qs.stringifyUrl({ url: pathname, query: currentQuery });
+            router.push(url);
+          }
+        }
+      })();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [searchParams]);
+
+  const handleClick = () => {
+    if (!user) {
+      setShowAuth('login');
+    } else {
+      router.push('/room');
+    }
+  };
 
   return (
     <div className="w-full h-full min-h-screen flex flex-col">
@@ -21,9 +95,8 @@ export default function LandingComponent() {
             <br />A tout de suite.
           </p>
           <div className="flex justify-center">
-            <Link
-              href="/home"
-              onClick={() => setRedirect(true)}
+            <div
+              onClick={handleClick}
               className={`h-14 flex justify-center items-center gap-2 px-6 text-lg font-semibold tracking-wide text-white bg-gradient-to-b from-[var(--primary-color)] to-[var(--primary-color)]/50 rounded-xl ${
                 redirect
                   ? 'pointer-events-none opacity-80'
@@ -49,11 +122,21 @@ export default function LandingComponent() {
                   />
                 </svg>
               )}
-              <span>Découvrir</span>
-            </Link>
+              <span>Commencer</span>
+            </div>
           </div>
         </div>
       </div>
+
+      {showAuth && (
+        <Popup onClose={() => setShowAuth(null)}>
+          {showAuth === 'login' ? (
+            <LoginForm setShowAuth={setShowAuth} />
+          ) : (
+            <RegisterFom setShowAuth={setShowAuth} credentials={credentials} />
+          )}
+        </Popup>
+      )}
     </div>
   );
 }

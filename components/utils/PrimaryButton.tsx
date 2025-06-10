@@ -14,7 +14,7 @@ export default function PrimaryButton({
   isLoading?: boolean;
   className?: string;
   children?: React.ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
 }) {
   return (
     <button

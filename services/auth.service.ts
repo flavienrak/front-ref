@@ -1,33 +1,29 @@
 import api from '@/axios/axios.instance';
 
-import { UserInterface } from '@/interfaces/user.interface';
-
 const jwtService = async () => {
   try {
-    const res = await api.get('/auth/jwt');
+    const res = await api.get('/auth/status');
     return res.data;
   } catch (error) {
     return { error: `JWT VERIFICATION ERROR: ${error}` };
   }
 };
 
-const loginService = async (data: {
-  email: string;
-  password: string;
-  remember: boolean;
-  role: UserInterface['role'];
-}) => {
+const loginService = async (data: { email: string; password: string }) => {
   try {
-    const res = await api.post(
-      '/auth/login',
-      {
-        email: data.email,
-        password: data.password,
-        remember: data.remember,
-        role: data.role,
-      },
-      { withCredentials: true },
-    );
+    const res = await api.post('/auth/login', {
+      email: data.email,
+      password: data.password,
+    });
+    return res.data;
+  } catch (error) {
+    return { error: `LOGIN ERROR: ${error}` };
+  }
+};
+
+const googleService = async (token: string) => {
+  try {
+    const res = await api.get(`/google/${token}`);
     return res.data;
   } catch (error) {
     return { error: `LOGIN ERROR: ${error}` };
@@ -38,14 +34,14 @@ const registerService = async (data: {
   name: string;
   email: string;
   password: string;
-  role: string;
+  profile?: string;
 }) => {
   try {
     const res = await api.post('/auth/register', {
       name: data.name,
       email: data.email,
       password: data.password,
-      role: data.role,
+      profile: data.profile,
     });
     return res.data;
   } catch (error) {
@@ -62,4 +58,10 @@ const logoutService = async () => {
   }
 };
 
-export { jwtService, loginService, registerService, logoutService };
+export {
+  jwtService,
+  loginService,
+  googleService,
+  registerService,
+  logoutService,
+};

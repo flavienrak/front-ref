@@ -4,6 +4,7 @@ import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 
 import persistSlice from './slices/persist.slice';
 import userSlice from './slices/user.slice';
+import roomSlice from './slices/room.slice';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
@@ -39,6 +40,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   user: userSlice,
+  userRoom: roomSlice,
   persistInfos: persistSlice,
 });
 

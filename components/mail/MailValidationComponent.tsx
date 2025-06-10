@@ -19,6 +19,11 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
+import {
+  codeVerificationService,
+  mailVerificationService,
+} from '@/services/mail.service';
+import { toast } from 'sonner';
 
 const otpSchema = z.object({
   otp: z.string().length(6, 'Le code OTP doit contenir 6 chiffres'),
@@ -40,23 +45,58 @@ export default function MailValidationComponent() {
   });
 
   React.useEffect(() => {
-    if (params.token) {
-      (async () => {})();
+    let isMounted = true;
+
+    const { token } = params;
+    if (token && typeof token === 'string') {
+      (async () => {
+        const res = await mailVerificationService(token);
+
+        if (isMounted) {
+          console.log('res:', res);
+          // if (!res.decoded) {
+          //   router.push('/');
+          // }
+        }
+      })();
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [params.token]);
 
   const onSubmit = async (data: OtpFormValues) => {
     const parseRes = otpSchema.safeParse(data);
 
     if (parseRes.success) {
+      const { token } = params;
+
       // API CALL
       if (isNaN(Number(parseRes.data.otp))) {
         form.setError('otp', {
           type: 'manual',
           message: 'Code OTP invalide',
         });
-      } else {
+      } else if (token && typeof token === 'string') {
         setIsLoading(true);
+        const res = await codeVerificationService({
+          token,
+          code: Number(parseRes.data.otp),
+        });
+
+        if (res.valid) {
+          toast.success('Email vérifié avec succès', {
+            description: 'Accès au plateforme',
+          });
+          window.location.href = '/room';
+        } else {
+          form.setError('otp', {
+            type: 'manual',
+            message: 'Code invalide',
+          });
+          setIsLoading(false);
+        }
       }
     }
   };
@@ -64,7 +104,7 @@ export default function MailValidationComponent() {
   return (
     <div className="w-full h-full">
       <div className="min-h-screen flex justify-center items-center">
-        <div className="flex flex-col items-center gap-8 p-8 rounded-xl shadow">
+        <div className="flex flex-col items-center gap-8 p-8 rounded-xl shadow border border-[var(--text-primary-color)]/10">
           <h1 className="text-4xl font-semibold text-center bg-gradient-to-b from-[var(--primary-color)] to-[var(--primary-color)]/50 bg-clip-text text-transparent">
             Code de validation
           </h1>
