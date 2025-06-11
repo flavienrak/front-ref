@@ -34,7 +34,7 @@ export default function RoomLayout({
 
   return (
     <div className="w-full min-h-screen flex flex-col bg-[var(--secondary-color)]">
-      <LandingHeader />
+      <LandingHeader href={'/room'} />
       <div className="flex-1 pt-16">{children}</div>
     </div>
   );

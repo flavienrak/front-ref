@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Image from 'next/image';
-import qs from 'query-string';
 import PrimaryButton from '../utils/PrimaryButton';
 
 import { z } from 'zod';
@@ -17,7 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Mail, User } from 'lucide-react';
+import { LockKeyhole, Mail } from 'lucide-react';
 import { loginService } from '@/services/auth.service';
 import { toast } from 'sonner';
 
@@ -142,7 +141,7 @@ export default function LoginForm({
                           required
                         />
                         <i className="absolute left-4 border-r pe-3 text-[var(--text-primary-color)]/70">
-                          <User size={20} />
+                          <LockKeyhole size={20} />
                         </i>
                       </div>
                     </FormControl>

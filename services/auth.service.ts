@@ -34,18 +34,30 @@ const registerService = async (data: {
   name: string;
   email: string;
   password: string;
-  profile?: string;
 }) => {
   try {
     const res = await api.post('/auth/register', {
       name: data.name,
       email: data.email,
       password: data.password,
-      profile: data.profile,
     });
     return res.data;
   } catch (error) {
     return { error: `REGISTER ERROR: ${error}` };
+  }
+};
+
+const oAuthRegisterService = async (data: {
+  token: string;
+  password: string;
+}) => {
+  try {
+    const res = await api.post(`/auth/register/${data.token}`, {
+      password: data.password,
+    });
+    return res.data;
+  } catch (error) {
+    return { error: `OAUTH REGISTER ERROR: ${error}` };
   }
 };
 
@@ -63,5 +75,6 @@ export {
   loginService,
   googleService,
   registerService,
+  oAuthRegisterService,
   logoutService,
 };

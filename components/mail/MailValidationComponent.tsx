@@ -19,11 +19,9 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
-import {
-  codeVerificationService,
-  mailVerificationService,
-} from '@/services/mail.service';
+import { codeVerificationService } from '@/services/mail.service';
 import { toast } from 'sonner';
+import { verifyTokenService } from '@/services/token.service';
 
 const otpSchema = z.object({
   otp: z.string().length(6, 'Le code OTP doit contenir 6 chiffres'),
@@ -47,19 +45,15 @@ export default function MailValidationComponent() {
   React.useEffect(() => {
     let isMounted = true;
 
-    const { token } = params;
-    if (token && typeof token === 'string') {
-      (async () => {
-        const res = await mailVerificationService(token);
+    (async () => {
+      const res = await verifyTokenService(params.token as string);
 
-        if (isMounted) {
-          console.log('res:', res);
-          // if (!res.decoded) {
-          //   router.push('/');
-          // }
+      if (isMounted) {
+        if (!res.decoded) {
+          router.push('/');
         }
-      })();
-    }
+      }
+    })();
 
     return () => {
       isMounted = false;
@@ -70,18 +64,16 @@ export default function MailValidationComponent() {
     const parseRes = otpSchema.safeParse(data);
 
     if (parseRes.success) {
-      const { token } = params;
-
       // API CALL
       if (isNaN(Number(parseRes.data.otp))) {
         form.setError('otp', {
           type: 'manual',
           message: 'Code OTP invalide',
         });
-      } else if (token && typeof token === 'string') {
+      } else if (params.token) {
         setIsLoading(true);
         const res = await codeVerificationService({
-          token,
+          token: params.token as string,
           code: Number(parseRes.data.otp),
         });
 

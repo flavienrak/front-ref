@@ -53,46 +53,62 @@ export default function UserProvider({
 
   const notProtectedPaths = ['/'];
 
-  const mailVerificationRegex = /^\/mail\/verification\/[^\/]+$/;
+  const notProtectedPathsRegex = /^\/(mail\/verification|auth)\/[^\/]+$/;
 
   React.useEffect(() => {
+    let isMounted = true;
+
     (async () => {
       const res = await jwtService();
 
-      if (res.id) {
-        setUserId(res.id);
-        if (
-          notProtectedPaths.includes(pathname) ||
-          mailVerificationRegex.test(pathname)
-        ) {
-          router.push('/room');
+      if (isMounted) {
+        if (res.id) {
+          setUserId(res.id);
+          if (
+            notProtectedPaths.includes(pathname) ||
+            notProtectedPathsRegex.test(pathname)
+          ) {
+            router.push('/room');
+          } else {
+            setIsLoading(false);
+          }
         } else {
+          if (
+            !notProtectedPaths.includes(pathname) &&
+            !notProtectedPathsRegex.test(pathname)
+          ) {
+            window.location.href = '/';
+          }
           setIsLoading(false);
         }
-      } else {
-        if (
-          !notProtectedPaths.includes(pathname) &&
-          !mailVerificationRegex.test(pathname)
-        ) {
-          window.location.href = '/';
-        }
-        setIsLoading(false);
       }
     })();
+
+    return () => {
+      isMounted = false;
+    };
   }, [pathname]);
 
   React.useEffect(() => {
+    let isMounted = true;
+
     if (userId) {
       (async () => {
         const res = await getUserService();
 
-        if (res.user) {
-          dispatch(setUserReducer({ user: res.user }));
-        } else {
-          window.location.href = '/';
+        if (isMounted) {
+          if (res.user) {
+            dispatch(setUserReducer({ user: res.user }));
+          } else {
+            window.location.href = '/';
+          }
         }
       })();
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [userId]);
 
   React.useEffect(() => {

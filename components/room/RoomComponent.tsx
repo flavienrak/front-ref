@@ -48,7 +48,7 @@ export default function RoomComponent() {
                         router.push(`/room/${params.id}/vote/${item.id}`);
                         setRedirectLoading(item.id);
                       }}
-                      className="w-64 h-32 bg-[var(--bg-secondary-color)] border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow"
+                      className="w-96 h-48 bg-[var(--bg-secondary-color)] border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow"
                     >
                       <CardHeader>
                         <CardTitle className="text-[var(--text-primary-color)]">
@@ -103,7 +103,7 @@ export default function RoomComponent() {
                 ) : (
                   <Card
                     onClick={() => setShowAdd(true)}
-                    className="w-64 h-32 p-0 text-gray-400 bg-[var(--bg-secondary-color)] cursor-pointer border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow"
+                    className="w-96 h-48 p-0 text-gray-400 bg-[var(--bg-secondary-color)] cursor-pointer border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow"
                   >
                     <div className="h-full w-full flex justify-center items-center">
                       <Plus size={40} />
@@ -112,11 +112,11 @@ export default function RoomComponent() {
                 )}
               </div>
 
-              <div className="w-64 flex items-center gap-3">
+              <div className="w-96 flex items-center gap-3">
                 <PrimaryButton
                   onClick={() => setShowAdd(true)}
                   label={'Créer un vote'}
-                  className="h-10 flex-1"
+                  className="h-12 flex-1 font-semibold"
                 />
               </div>
             </div>

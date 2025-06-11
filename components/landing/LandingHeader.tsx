@@ -13,7 +13,7 @@ import { updatePersistReducer } from '@/redux/slices/persist.slice';
 import { logoutService } from '@/services/auth.service';
 import { toast } from 'sonner';
 
-export default function LandingHeader() {
+export default function LandingHeader({ href }: { href?: string }) {
   const { mode } = useSelector((state: RootState) => state.persistInfos);
   const { user } = useSelector((state: RootState) => state.user);
 
@@ -34,7 +34,7 @@ export default function LandingHeader() {
     <div className="fixed top-0 left-0 right-0 w-full h-16 flex justify-center border-b border-[var(--text-primary-color)]/10">
       <div className="w-full max-w-7xl flex items-center justify-between">
         <Link
-          href="/"
+          href={href ?? '/'}
           className="flex items-center gap-1 text-[var(--primary-color)]"
         >
           <SquareKanban />

@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Mail, User } from 'lucide-react';
+import { LockKeyhole, Mail, User } from 'lucide-react';
 import { registerService } from '@/services/auth.service';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -29,10 +29,8 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function RegisterFom({
-  credentials,
   setShowAuth,
 }: {
-  credentials?: { name: string; email: string; profile: string };
   setShowAuth: (value: 'login' | 'register') => void;
 }) {
   const router = useRouter();
@@ -42,8 +40,8 @@ export default function RegisterFom({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: credentials?.name ?? '',
-      email: credentials?.email ?? '',
+      name: '',
+      email: '',
       password: '',
     },
   });
@@ -59,7 +57,6 @@ export default function RegisterFom({
         name: parseRes.data.name,
         email: parseRes.data.email,
         password: parseRes.data.password,
-        profile: credentials?.profile,
       });
 
       if (res.userAlreadyExist) {
@@ -177,7 +174,7 @@ export default function RegisterFom({
                           required
                         />
                         <i className="absolute left-4 border-r pe-3 text-[var(--text-primary-color)]/70">
-                          <User size={20} />
+                          <LockKeyhole size={20} />
                         </i>
                       </div>
                     </FormControl>
