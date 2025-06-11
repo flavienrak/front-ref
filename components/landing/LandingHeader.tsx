@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import AddSpace from '../utils/AddSpace';
 import Popup from '../utils/Popup';
-import JoinLink from '../utils/JoinLink';
+import JoinRoom from '../utils/JoinRoom';
 
 import { LogOut, Moon, SquareKanban, Sun } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -102,7 +102,7 @@ export default function LandingHeader({ href }: { href?: string }) {
 
       {showJoin && (
         <Popup onClose={() => setShowJoin(false)}>
-          <JoinLink />
+          <JoinRoom />
         </Popup>
       )}
     </div>

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Popup from '@/components/utils/Popup';
 import AddSpace from '@/components/utils/AddSpace';
 import PrimaryButton from '@/components/utils/PrimaryButton';
-import JoinLink from '@/components/utils/JoinLink';
+import JoinRoom from '@/components/utils/JoinRoom';
 
 import { Plus, Trash } from 'lucide-react';
 import {
@@ -31,8 +31,6 @@ export default function UserRoomComponent() {
   const [redirectLoading, setRedirectLoading] = React.useState<number | null>(
     null,
   );
-
-  console.log(userRooms);
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -151,7 +149,7 @@ export default function UserRoomComponent() {
 
       {showJoin && (
         <Popup onClose={() => setShowJoin(false)}>
-          <JoinLink />
+          <JoinRoom />
         </Popup>
       )}
     </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import PrimaryButton from '../utils/PrimaryButton';
+import PrimaryButton from './PrimaryButton';
 
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,14 +16,34 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { LinkIcon } from 'lucide-react';
+import { protocol } from '@/providers/User.provider';
 
 const formSchema = z.object({
-  link: z.string().trim().url('Lien invalide'),
+  link: z
+    .string()
+    .trim()
+    .url('Lien invalide')
+    .refine(
+      (val) => {
+        try {
+          const url = new URL(val);
+          return (
+            url.protocol === `${protocol}:` &&
+            /^\/room\/\d+$/.test(url.pathname)
+          );
+        } catch (e) {
+          return false;
+        }
+      },
+      {
+        message: `Lien invalide`,
+      },
+    ),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function JoinLink() {
+export default function JoinRoom() {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const roomForm = useForm<FormValues>({
@@ -40,7 +60,7 @@ export default function JoinLink() {
       // API CALL
       setIsLoading(true);
 
-      setIsLoading(false);
+      window.open(parseRes.data.link, '_self');
     }
   };
 

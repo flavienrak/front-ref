@@ -48,7 +48,7 @@ export default function RoomComponent() {
                         router.push(`/room/${params.id}/vote/${item.id}`);
                         setRedirectLoading(item.id);
                       }}
-                      className="w-96 h-48 bg-[var(--bg-secondary-color)] border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow"
+                      className="w-96 h-48 flex flex-col justify-between bg-[var(--bg-secondary-color)] border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow"
                     >
                       <CardHeader>
                         <CardTitle className="text-[var(--text-primary-color)]">
