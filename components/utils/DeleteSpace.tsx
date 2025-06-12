@@ -18,13 +18,13 @@ export default function DeleteSpace({
 
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const handleDeleteRoom = async () => {
+  const handleDelete = async () => {
     setIsLoading(true);
     const res = await deleteRoomService(roomId);
 
-    if (res.deleted) {
+    if (res.room) {
       toast.success('Espace supprimé avec succès');
-      dispatch(deleteRoomReducer({ roomId }));
+      dispatch(deleteRoomReducer({ room: res.room }));
       onClose();
     }
   };
@@ -46,7 +46,7 @@ export default function DeleteSpace({
           Annuler
         </button>
         <button
-          onClick={handleDeleteRoom}
+          onClick={handleDelete}
           className={`flex-1 h-12 flex justify-center items-center gap-2 font-semibold text-white bg-red-500 rounded-full ${
             isLoading
               ? 'opacity-80 pointer-events-none'

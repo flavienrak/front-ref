@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Popup from '@/components/utils/Popup';
 import EditVote from '@/components/utils/EditVote';
 import PrimaryButton from '@/components/utils/PrimaryButton';
+import UserCard from '@/components/room/UserCard';
 
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -15,12 +16,16 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { ArrowLeft, CheckCheck, CupSoda, Pen } from 'lucide-react';
+import { ArrowLeft, CheckCheck, Clock, CupSoda, Pen } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'next/navigation';
-import { chooseCardService } from '@/services/room.service';
+import { chooseCardService, showCardsService } from '@/services/room.service';
 import { RootState } from '@/redux/store';
-import { updateCardReducer } from '@/redux/slices/room.slice';
+import {
+  updateCardReducer,
+  updateVoteReducer,
+} from '@/redux/slices/room.slice';
+import { CardInterface } from '@/interfaces/card.interface';
 
 export default function VoteComponent() {
   const { user } = useSelector((state: RootState) => state.user);
@@ -30,6 +35,8 @@ export default function VoteComponent() {
   const dispatch = useDispatch();
 
   const [showEdit, setShowEdit] = React.useState(false);
+  const [lists, setLists] = React.useState<number[]>([]);
+  const [mineCard, setMineCard] = React.useState<CardInterface | null>(null);
 
   const getNumberList = (data: {
     min: number;
@@ -43,13 +50,23 @@ export default function VoteComponent() {
     return result;
   };
 
-  const lists = vote
-    ? getNumberList({
+  React.useEffect(() => {
+    if (vote && user) {
+      const actualLists = getNumberList({
         max: vote.max,
         min: vote.min,
         mid: vote.mid,
-      })
-    : [];
+      });
+
+      setLists(actualLists);
+
+      const actualCard = vote.cards.find((c) => c.userId === user.id);
+
+      if (actualCard) {
+        setMineCard(actualCard);
+      }
+    }
+  }, [vote, user]);
 
   const handleChooseCard = async (value: string | number) => {
     if (params.id && params.voteId) {
@@ -65,14 +82,19 @@ export default function VoteComponent() {
     }
   };
 
-  const getCard = () => {
-    if (user) {
-      return vote?.cards.find((c) => c.userId === user.id);
-    }
-    return null;
+  const handleGetCard = (userId: number) => {
+    return vote?.cards.find((item) => item.userId === userId);
   };
 
-  const mineCard = getCard();
+  const handleShowCards = async () => {
+    if (room && vote) {
+      const res = await showCardsService({ roomId: room.id, voteId: vote.id });
+
+      if (res.vote) {
+        dispatch(updateVoteReducer({ vote: res.vote }));
+      }
+    }
+  };
 
   if (vote && room)
     return (
@@ -104,88 +126,93 @@ export default function VoteComponent() {
 
             <div className="flex-1 w-full flex flex-col py-16 px-8 items-center gap-8 bg-[var(--bg-tertiary-color)] rounded-md">
               <div className="w-full flex justify-center gap-8">
-                {room?.userRooms.map((u) => (
+                {room?.userRooms.map((item) => (
                   <div
-                    key={`user-${u.id}`}
+                    key={`user-${item.id}`}
                     className="flex flex-col items-center gap-2"
                   >
-                    <p className="font-semibold text-lg text-[var(--text-primary-color)]">
-                      {u.user.name}
+                    <p className="max-w-20 font-semibold text-lg text-[var(--text-primary-color)] whitespace-nowrap text-ellipsis overflow-hidden">
+                      {item.user.name}
                     </p>
-                    <div className="flex justify-center items-center text-white bg-gradient-to-b from-[var(--primary-color)] to-[var(--primary-color)]/50 h-20 w-20 border border-[var(--text-primary-color)]/10 rounded-md">
-                      <CheckCheck size={22} />
-                    </div>
+
+                    <UserCard card={handleGetCard(item.user.id)} />
                   </div>
                 ))}
               </div>
 
-              <button className="flex justify-center items-center text-white bg-gradient-to-b from-[var(--primary-color)] to-[var(--primary-color)]/50 px-6 py-2 rounded-md cursor-pointer hover:opacity-80">
-                Afficher les résultats
-              </button>
+              {vote.status === 'hidden' && (
+                <div className="flex flex-col items-center gap-8">
+                  <button
+                    onClick={handleShowCards}
+                    className="w-max flex justify-center items-center text-white bg-gradient-to-b from-[var(--primary-color)] to-[var(--primary-color)]/50 px-6 py-2 rounded-md cursor-pointer hover:opacity-80"
+                  >
+                    Afficher les résultats
+                  </button>
 
-              <div className="flex justify-center">
-                <Carousel className="w-full max-w-xl">
-                  <CarouselContent className="-ml-1 flex">
-                    {lists.map((item) => (
-                      <CarouselItem
-                        key={`card-${item}`}
-                        className={clsx(
-                          'pl-1 cursor-pointer',
-                          lists.length < 6
-                            ? `basis-1/${lists.length}`
-                            : 'basis-1/6',
-                        )}
-                        onClick={() => handleChooseCard(item)}
-                      >
-                        <div className="p-1">
-                          <Card
-                            className={`h-20 w-20 p-0 rounded-md text-[var(--text-primary-color)] ${
-                              mineCard && Number(mineCard.value) === item
-                                ? 'bg-[var(--primary-color)] border-[var(--primary-color)]/10 text-white'
-                                : 'bg-[var(--bg-secondary-color)] border-[var(--primary-color)]/10 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)]/25'
-                            }`}
+                  <div className="flex justify-center">
+                    <Carousel className="w-full max-w-xl">
+                      <CarouselContent className="-ml-1 flex">
+                        {lists.map((item) => (
+                          <CarouselItem
+                            key={`card-${item}`}
+                            className={clsx(
+                              'pl-1 cursor-pointer',
+                              lists.length < 6
+                                ? `basis-1/${lists.length}`
+                                : 'basis-1/6',
+                            )}
+                            onClick={() => handleChooseCard(item)}
                           >
-                            <CardContent className="flex aspect-square items-center justify-center">
-                              <span className="text-2xl font-semibold select-none">
-                                {item}
-                              </span>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </CarouselItem>
-                    ))}
+                            <div className="p-1">
+                              <Card
+                                className={`h-20 w-20 p-0 rounded-md text-[var(--text-primary-color)] ${
+                                  mineCard && Number(mineCard.value) === item
+                                    ? 'bg-[var(--primary-color)] border-[var(--primary-color)]/10 text-white'
+                                    : 'bg-[var(--bg-secondary-color)] border-[var(--primary-color)]/10 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)]/25'
+                                }`}
+                              >
+                                <CardContent className="flex aspect-square items-center justify-center">
+                                  <span className="text-2xl font-semibold select-none">
+                                    {item}
+                                  </span>
+                                </CardContent>
+                              </Card>
+                            </div>
+                          </CarouselItem>
+                        ))}
 
-                    <CarouselItem
-                      className={clsx(
-                        'pl-1 cursor-pointer',
-                        lists.length < 6
-                          ? `basis-1/${lists.length}`
-                          : 'basis-1/6',
-                      )}
-                      onClick={() => handleChooseCard('coffee')}
-                    >
-                      <div className="p-1">
-                        <Card
-                          className={`h-20 w-20 p-0 rounded-md text-[var(--text-primary-color)] ${
-                            mineCard && mineCard.value === 'coffee'
-                              ? 'bg-[var(--primary-color)] border-[var(--primary-color)]/10 text-white'
-                              : 'bg-[var(--bg-secondary-color)] border-[var(--primary-color)]/10 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)]/25'
-                          }`}
+                        <CarouselItem
+                          className={clsx(
+                            'pl-1 cursor-pointer',
+                            lists.length < 6
+                              ? `basis-1/${lists.length}`
+                              : 'basis-1/6',
+                          )}
+                          onClick={() => handleChooseCard('coffee')}
                         >
-                          {' '}
-                          <CardContent className="flex aspect-square items-center justify-center">
-                            <span className="text-2xl font-semibold select-none">
-                              <CupSoda />
-                            </span>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
-                  </CarouselContent>
-                  <CarouselPrevious />
-                  <CarouselNext />
-                </Carousel>
-              </div>
+                          <div className="p-1">
+                            <Card
+                              className={`h-20 w-20 p-0 rounded-md text-[var(--text-primary-color)] ${
+                                mineCard && mineCard.value === 'coffee'
+                                  ? 'bg-[var(--primary-color)] border-[var(--primary-color)]/10 text-white'
+                                  : 'bg-[var(--bg-secondary-color)] border-[var(--primary-color)]/10 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)]/25'
+                              }`}
+                            >
+                              <CardContent className="flex aspect-square items-center justify-center">
+                                <span className="text-2xl font-semibold select-none">
+                                  <CupSoda size={22} />
+                                </span>
+                              </CardContent>
+                            </Card>
+                          </div>
+                        </CarouselItem>
+                      </CarouselContent>
+                      <CarouselPrevious />
+                      <CarouselNext />
+                    </Carousel>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

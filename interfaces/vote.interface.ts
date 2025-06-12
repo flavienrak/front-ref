@@ -4,6 +4,7 @@ import { RoomInterface } from './room.interface';
 export interface VoteInterface {
   id: number;
   content: string;
+  status: 'hidden' | 'show';
   min: number;
   max: number;
   mid: number;

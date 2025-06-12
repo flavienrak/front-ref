@@ -64,7 +64,7 @@ export default function EditVote({ onClose }: { onClose: () => void }) {
   const onSubmit = async (data: FormValues) => {
     const parseRes = formSchema.safeParse(data);
 
-    if (parseRes.success && params.id) {
+    if (parseRes.success && params.voteId) {
       if (isNaN(Number(parseRes.data.max))) {
         form.setError('max', {
           type: 'manual',
@@ -91,7 +91,7 @@ export default function EditVote({ onClose }: { onClose: () => void }) {
         setIsLoading(true);
 
         const res = await updateVoteService({
-          id: Number(params.id),
+          id: Number(params.voteId),
           content: parseRes.data.content,
           max: Number(parseRes.data.max),
           min: Number(parseRes.data.min),

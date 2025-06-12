@@ -8,7 +8,7 @@ import PrimaryButton from '@/components/utils/PrimaryButton';
 import JoinRoom from '@/components/utils/JoinRoom';
 import DeleteSpace from '@/components/utils/DeleteSpace';
 
-import { Plus, Trash } from 'lucide-react';
+import { Plus, Share2, Trash } from 'lucide-react';
 import {
   Card,
   CardAction,
@@ -21,6 +21,12 @@ import {
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useRouter } from 'next/navigation';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { toast } from 'sonner';
 
 export default function UserRoomComponent() {
   const { userRooms } = useSelector((state: RootState) => state.userRoom);
@@ -35,6 +41,14 @@ export default function UserRoomComponent() {
   const [actualUserRoom, setActualUserRoom] = React.useState<number | null>(
     null,
   );
+
+  const handleCopy = async (id: number) => {
+    const { origin } = window.location;
+    const link = `${origin}/room/${id}`;
+
+    await navigator.clipboard.writeText(link);
+    toast.success('Lien copié avec succès');
+  };
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -53,7 +67,7 @@ export default function UserRoomComponent() {
                     router.push(`/room/${item.room.id}`);
                     setRedirectLoading(item.room.id);
                   }}
-                  className="w-96 h-48 bg-[var(--bg-secondary-color)] border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow"
+                  className="w-96 h-52 bg-[var(--bg-secondary-color)] border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow group"
                 >
                   <CardHeader>
                     <CardTitle className="text-[var(--text-primary-color)]">
@@ -67,7 +81,7 @@ export default function UserRoomComponent() {
                         event.stopPropagation();
                         setActualUserRoom(item.room.id);
                       }}
-                      className="cursor-pointer text-red-400 hover:text-red-500"
+                      className="cursor-pointer text-red-400 hover:text-red-500 opacity-0 group-hover:opacity-100"
                     >
                       <Trash size={18} />
                     </CardAction>
@@ -82,7 +96,22 @@ export default function UserRoomComponent() {
                     </p>
                   </CardContent>
                   <CardFooter>
-                    <div className="w-full flex justify-end">
+                    <div className="w-full flex justify-between">
+                      <Tooltip>
+                        <TooltipTrigger
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleCopy(item.room.id);
+                          }}
+                        >
+                          <i className="h-8 w-8 flex items-center justify-center text-[var(--primary-color)] bg-[var(--primary-color)]/10 rounded-full hover:bg-[var(--primary-color)]/25 cursor-pointer">
+                            <Share2 size={16} className="-translate-x-[1px]" />
+                          </i>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Partager</p>
+                        </TooltipContent>
+                      </Tooltip>
                       <Link
                         href={`/room/${item.room.id}`}
                         onClick={() => setRedirectLoading(item.room.id)}
@@ -120,7 +149,7 @@ export default function UserRoomComponent() {
             ) : (
               <Card
                 onClick={() => setShowAdd(true)}
-                className="w-96 h-48 p-0 text-gray-400 bg-[var(--bg-secondary-color)] cursor-pointer border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow"
+                className="w-96 h-52 p-0 text-gray-400 bg-[var(--bg-secondary-color)] cursor-pointer border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow"
               >
                 <div className="h-full w-full flex justify-center items-center">
                   <Plus size={40} />

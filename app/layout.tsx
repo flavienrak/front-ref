@@ -7,6 +7,7 @@ import ThemeProvider from '@/providers/Theme.provider';
 import SocketProvider from '@/providers/Socket.provider';
 import ToastProvider from '@/providers/Toast.provider';
 import UserProvider from '@/providers/User.provider';
+import RoomProvider from '@/providers/Room.provider';
 
 const openSans = Open_Sans({
   subsets: ['latin'],
@@ -32,7 +33,9 @@ export default function RootLayout({
           <ThemeProvider>
             <SocketProvider>
               <ToastProvider>
-                <UserProvider>{children}</UserProvider>
+                <UserProvider>
+                  <RoomProvider>{children}</RoomProvider>
+                </UserProvider>
               </ToastProvider>
             </SocketProvider>
           </ThemeProvider>

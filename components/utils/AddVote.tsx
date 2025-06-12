@@ -19,6 +19,8 @@ import { PenLine, SquareM, SquareMinus, SquarePlus } from 'lucide-react';
 import { createVoteService } from '@/services/room.service';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { addVoteReducer } from '@/redux/slices/room.slice';
+import { useDispatch } from 'react-redux';
 
 const formSchema = z.object({
   content: z.string().trim().min(3, 'Sujet requis'),
@@ -32,6 +34,7 @@ type FormValues = z.infer<typeof formSchema>;
 export default function AddVote() {
   const params = useParams();
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -84,6 +87,7 @@ export default function AddVote() {
 
         if (res.vote) {
           toast.success('Vote créé avec succès');
+          dispatch(addVoteReducer({ vote: res.vote }));
           router.push(`/room/${params.id}/vote/${res.vote.id}`);
         }
       }

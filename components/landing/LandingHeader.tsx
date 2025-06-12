@@ -31,7 +31,7 @@ export default function LandingHeader({ href }: { href?: string }) {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 w-full h-16 flex justify-center border-b border-[var(--text-primary-color)]/10">
+    <div className="fixed top-0 left-0 right-0 w-full h-16 flex justify-center px-4 xl:px-0 border-b border-[var(--text-primary-color)]/10">
       <div className="w-full max-w-7xl flex items-center justify-between">
         <Link
           href={href ?? '/'}

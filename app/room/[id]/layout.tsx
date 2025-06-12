@@ -3,15 +3,18 @@
 import React from 'react';
 
 import { useParams, useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getRoomService, getVoteService } from '@/services/room.service';
 import { setRoomReducer, setVoteReducer } from '@/redux/slices/room.slice';
+import { RootState } from '@/redux/store';
 
 export default function RoomIdLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { room } = useSelector((state: RootState) => state.userRoom);
+
   const router = useRouter();
   const params = useParams();
   const dispatch = useDispatch();
@@ -43,7 +46,7 @@ export default function RoomIdLayout({
   React.useEffect(() => {
     let isMounted = true;
 
-    if (params.voteId) {
+    if (params.voteId && room) {
       if (isNaN(Number(params.voteId))) {
         router.push(`/room/${params.id}`);
       } else {
@@ -65,7 +68,7 @@ export default function RoomIdLayout({
     return () => {
       isMounted = false;
     };
-  }, [params.voteId]);
+  }, [params.voteId, room]);
 
   return <div className="w-full">{children}</div>;
 }

@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Popup from '@/components/utils/Popup';
 import AddVote from '@/components/utils/AddVote';
+import DeleteVote from '@/components/utils/DeleteVote';
 import PrimaryButton from '@/components/utils/PrimaryButton';
 
 import { useParams, useRouter } from 'next/navigation';
@@ -28,6 +29,7 @@ export default function RoomComponent() {
   const [redirectLoading, setRedirectLoading] = React.useState<number | null>(
     null,
   );
+  const [actualVote, setActualVote] = React.useState<number | null>(null);
 
   if (room)
     return (
@@ -43,12 +45,12 @@ export default function RoomComponent() {
                 {room.votes.length > 0 ? (
                   room.votes.map((item) => (
                     <Card
-                      key={`room-${item.id}`}
+                      key={`vote-${item.id}`}
                       onClick={() => {
                         router.push(`/room/${params.id}/vote/${item.id}`);
                         setRedirectLoading(item.id);
                       }}
-                      className="w-96 h-48 flex flex-col justify-between bg-[var(--bg-secondary-color)] border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow"
+                      className="w-96 h-52 flex flex-col justify-between bg-[var(--bg-secondary-color)] border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow group"
                     >
                       <CardHeader>
                         <CardTitle className="text-[var(--text-primary-color)]">
@@ -58,8 +60,9 @@ export default function RoomComponent() {
                         <CardAction
                           onClick={(event) => {
                             event.stopPropagation();
+                            setActualVote(item.id);
                           }}
-                          className="cursor-pointer text-red-400 hover:text-red-500"
+                          className="cursor-pointer text-red-400 hover:text-red-500 opacity-0 group-hover:opacity-100"
                         >
                           <Trash size={18} />
                         </CardAction>
@@ -104,7 +107,7 @@ export default function RoomComponent() {
                 ) : (
                   <Card
                     onClick={() => setShowAdd(true)}
-                    className="w-96 h-48 p-0 text-gray-400 bg-[var(--bg-secondary-color)] cursor-pointer border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow"
+                    className="w-96 h-52 p-0 text-gray-400 bg-[var(--bg-secondary-color)] cursor-pointer border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow"
                   >
                     <div className="h-full w-full flex justify-center items-center">
                       <Plus size={40} />
@@ -127,6 +130,15 @@ export default function RoomComponent() {
         {showAdd && (
           <Popup onClose={() => setShowAdd(false)}>
             <AddVote />
+          </Popup>
+        )}
+
+        {actualVote && (
+          <Popup onClose={() => setActualVote(null)}>
+            <DeleteVote
+              voteId={actualVote}
+              onClose={() => setActualVote(null)}
+            />
           </Popup>
         )}
       </div>

@@ -76,6 +76,15 @@ const updateVoteService = async (data: {
   }
 };
 
+const deleteVoteService = async (data: { roomId: number; voteId: number }) => {
+  try {
+    const res = await api.delete(`/room/${data.roomId}/vote/${data.voteId}`);
+    return res.data;
+  } catch (error) {
+    return { error: `DELETE VOTE ERROR: ${error}` };
+  }
+};
+
 const chooseCardService = async (data: {
   roomId: number;
   voteId: number;
@@ -92,6 +101,15 @@ const chooseCardService = async (data: {
   }
 };
 
+const showCardsService = async (data: { roomId: number; voteId: number }) => {
+  try {
+    const res = await api.get(`/room/${data.roomId}/vote/${data.voteId}/show`);
+    return res.data;
+  } catch (error) {
+    return { error: `SHOW CARDS ERROR: ${error}` };
+  }
+};
+
 const deleteRoomService = async (id: number) => {
   try {
     const res = await api.delete(`/room/${id}`);
@@ -102,12 +120,21 @@ const deleteRoomService = async (id: number) => {
 };
 
 export {
+  // USER ROOMS
   createRoomService,
   getUserRoomsService,
+
+  // ROOM
   getRoomService,
+  deleteRoomService,
+
+  // VOTE
   getVoteService,
   createVoteService,
   updateVoteService,
+  deleteVoteService,
+
+  // CARD
   chooseCardService,
-  deleteRoomService,
+  showCardsService,
 };
