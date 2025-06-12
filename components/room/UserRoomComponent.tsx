@@ -6,6 +6,7 @@ import Popup from '@/components/utils/Popup';
 import AddSpace from '@/components/utils/AddSpace';
 import PrimaryButton from '@/components/utils/PrimaryButton';
 import JoinRoom from '@/components/utils/JoinRoom';
+import DeleteSpace from '@/components/utils/DeleteSpace';
 
 import { Plus, Trash } from 'lucide-react';
 import {
@@ -31,6 +32,9 @@ export default function UserRoomComponent() {
   const [redirectLoading, setRedirectLoading] = React.useState<number | null>(
     null,
   );
+  const [actualUserRoom, setActualUserRoom] = React.useState<number | null>(
+    null,
+  );
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -46,8 +50,8 @@ export default function UserRoomComponent() {
                 <Card
                   key={`room-${item.id}`}
                   onClick={() => {
-                    router.push(`/room/${item.id}`);
-                    setRedirectLoading(item.id);
+                    router.push(`/room/${item.room.id}`);
+                    setRedirectLoading(item.room.id);
                   }}
                   className="w-96 h-48 bg-[var(--bg-secondary-color)] border-[var(--primary-color)]/10 transition-[colors,box-shadow] duration-150 hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] customShadow"
                 >
@@ -61,6 +65,7 @@ export default function UserRoomComponent() {
                     <CardAction
                       onClick={(event) => {
                         event.stopPropagation();
+                        setActualUserRoom(item.room.id);
                       }}
                       className="cursor-pointer text-red-400 hover:text-red-500"
                     >
@@ -79,15 +84,15 @@ export default function UserRoomComponent() {
                   <CardFooter>
                     <div className="w-full flex justify-end">
                       <Link
-                        href={`/room/${item.id}`}
-                        onClick={() => setRedirectLoading(item.id)}
+                        href={`/room/${item.room.id}`}
+                        onClick={() => setRedirectLoading(item.room.id)}
                         className={`flex justify-center items-center gap-1 text-sm text-[var(--primary-color)] underline-offset-1 rounded-sm ${
-                          redirectLoading === item.id
+                          redirectLoading === item.room.id
                             ? 'opacity-80 pointer-events-none'
                             : 'hover:underline'
                         }`}
                       >
-                        {redirectLoading === item.id && (
+                        {redirectLoading === item.room.id && (
                           <svg
                             aria-hidden="true"
                             role="status"
@@ -150,6 +155,15 @@ export default function UserRoomComponent() {
       {showJoin && (
         <Popup onClose={() => setShowJoin(false)}>
           <JoinRoom />
+        </Popup>
+      )}
+
+      {actualUserRoom && (
+        <Popup onClose={() => setActualUserRoom(null)}>
+          <DeleteSpace
+            roomId={actualUserRoom}
+            onClose={() => setActualUserRoom(null)}
+          />
         </Popup>
       )}
     </div>

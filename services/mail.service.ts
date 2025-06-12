@@ -1,4 +1,5 @@
 import api from '@/axios/axios.instance';
+import { AxiosError } from 'axios';
 
 const mailVerificationService = async (token: string) => {
   try {

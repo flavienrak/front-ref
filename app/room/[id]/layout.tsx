@@ -28,6 +28,8 @@ export default function RoomIdLayout({
         if (isMounted) {
           if (res.room) {
             dispatch(setRoomReducer({ room: res.room }));
+          } else {
+            router.push('/room');
           }
         }
       })();

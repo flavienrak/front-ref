@@ -6,12 +6,10 @@ import { CardInterface } from '@/interfaces/card.interface';
 
 const initialState: {
   userRooms: UserRoomInterface[];
-  rooms: RoomInterface[];
   room: RoomInterface | null;
   vote: VoteInterface | null;
 } = {
   userRooms: [],
-  rooms: [],
   room: null,
   vote: null,
 };
@@ -25,15 +23,16 @@ const roomSlice = createSlice({
 
       state.userRooms = data.userRooms;
     },
-    setRoomsReducer: (state, action) => {
-      const data: { rooms: RoomInterface[] } = action.payload;
+    addRoomReducer: (state, action) => {
+      const data: { userRoom: UserRoomInterface } = action.payload;
 
-      state.rooms = data.rooms;
+      state.userRooms.push(data.userRoom);
     },
     setRoomReducer: (state, action) => {
       const data: { room: RoomInterface } = action.payload;
 
       state.room = data.room;
+      state.vote = null;
     },
     setVoteReducer: (state, action) => {
       const data: { vote: VoteInterface } = action.payload;
@@ -70,16 +69,25 @@ const roomSlice = createSlice({
         };
       }
     },
+
+    deleteRoomReducer: (state, action) => {
+      const data: { roomId: number } = action.payload;
+
+      state.userRooms = state.userRooms.filter(
+        (item) => item.room.id !== data.roomId,
+      );
+    },
   },
 });
 
 export const {
   setUserRoomsReducer,
-  setRoomsReducer,
+  addRoomReducer,
   setRoomReducer,
   setVoteReducer,
   updateVoteReducer,
   updateCardReducer,
+  deleteRoomReducer,
 } = roomSlice.actions;
 
 export default roomSlice.reducer;

@@ -92,6 +92,15 @@ const chooseCardService = async (data: {
   }
 };
 
+const deleteRoomService = async (id: number) => {
+  try {
+    const res = await api.delete(`/room/${id}`);
+    return res.data;
+  } catch (error) {
+    return { error: `DELETE ROOM ERROR: ${error}` };
+  }
+};
+
 export {
   createRoomService,
   getUserRoomsService,
@@ -100,4 +109,5 @@ export {
   createVoteService,
   updateVoteService,
   chooseCardService,
+  deleteRoomService,
 };

@@ -1,15 +1,15 @@
 'use client';
 
 import React from 'react';
-import PrimaryButton from '@/components/utils/PrimaryButton';
+import Link from 'next/link';
 import Popup from '@/components/utils/Popup';
 import AddVote from '@/components/utils/AddVote';
-import Link from 'next/link';
+import PrimaryButton from '@/components/utils/PrimaryButton';
 
 import { useParams, useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 import { Plus, Trash } from 'lucide-react';
+import { RootState } from '@/redux/store';
 import {
   Card,
   CardAction,
@@ -54,6 +54,7 @@ export default function RoomComponent() {
                         <CardTitle className="text-[var(--text-primary-color)]">
                           {item.content}
                         </CardTitle>
+
                         <CardAction
                           onClick={(event) => {
                             event.stopPropagation();

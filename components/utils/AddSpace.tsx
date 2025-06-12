@@ -27,7 +27,7 @@ import { UserInterface } from '@/interfaces/user.interface';
 import { createRoomService } from '@/services/room.service';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { updateUserReducer } from '@/redux/slices/user.slice';
+import { addRoomReducer } from '@/redux/slices/room.slice';
 
 const formSchema = z.object({
   name: z.string().trim().min(3, 'Nom requis'),
@@ -73,8 +73,8 @@ export default function AddSpace() {
         setIsLoading(false);
       } else if (res.userRoom) {
         toast.success('Espace créé avec succès');
-        dispatch(updateUserReducer({ userRoom: res.userRoom }));
-        router.push(`/room/${res.userRoom.id}`);
+        dispatch(addRoomReducer({ userRoom: res.userRoom }));
+        router.push(`/room/${res.userRoom.room.id}`);
       }
     }
   };
